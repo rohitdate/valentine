@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>For You ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      color: white;
+    }
+
+    #slideshow img {
+      position: absolute;
+      max-width: 90%;
+      max-height: 90%;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(255, 0, 100, 0.6);
+    }
+
+    #message {
+      position: absolute;
+      text-align: center;
+      font-size: 2.5rem;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    #yesBtn {
+      margin-top: 20px;
+      padding: 12px 28px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 30px;
+      background: #ff2f6d;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+
+    #yesBtn:hover {
+      background: #ff5c8a;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="slideshow">
+    <img src="photos/1.jpg">
+    <img src="photos/2.jpg">
+    <img src="photos/3.jpg">
+    <img src="photos/4.jpg">
+    <img src="photos/5.jpg">
+    <img src="photos/6.jpg">
+    <!-- Add more if you want -->
+  </div>
+
+  <div id="message">
+    Will you be my Valentine? 💖
+    <br>
+    <button id="yesBtn" onclick="celebrate()">Yes 💕</button>
+  </div>
+
+  <script>
+    const images = document.querySelectorAll('#slideshow img');
+    const message = document.getElementById('message');
+    const yesBtn = document.getElementById('yesBtn');
+
+    let index = 0;
+
+    function showNextImage() {
+      if (index > 0) {
+        images[index - 1].style.opacity = 0;
+      }
+
+      if (index < images.length) {
+        images[index].style.opacity = 1;
+        index++;
+        setTimeout(showNextImage, 2500);
+      } else {
+        setTimeout(() => {
+          message.style.opacity = 1;
+          yesBtn.style.display = 'inline-block';
+        }, 1500);
+      }
+    }
+
+    function celebrate() {
+      message.innerHTML = "Yayyy!! ❤️💃🕺<br>Happy Valentine’s Day!";
+    }
+
+    showNextImage();
+  </script>
+
+</body>
+</html>
