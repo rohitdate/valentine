@@ -3,104 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <title>For You ❤️</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Mobile / iPhone friendly viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <style>
+    :root {
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       margin: 0;
-      background: #000;
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+      background: radial-gradient(circle at top, #1a001f, #000);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      font-family: 'Arial', sans-serif;
+      height: 100svh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       overflow: hidden;
       color: white;
+      text-align: center;
     }
 
     #slideshow img {
       position: absolute;
-      max-width: 90%;
-      max-height: 90%;
+      width: 90vw;
+      height: 80svh;
+      object-fit: contain;
       opacity: 0;
       transition: opacity 1.5s ease-in-out;
       border-radius: 16px;
-      box-shadow: 0 0 30px rgba(255, 0, 100, 0.6);
+      box-shadow: 0 0 25px rgba(255, 64, 129, 0.5);
     }
 
     #message {
       position: absolute;
-      text-align: center;
-      font-size: 2.5rem;
+      padding: 0 16px;
       opacity: 0;
       transition: opacity 2s ease;
     }
 
-    #yesBtn {
-      margin-top: 20px;
-      padding: 12px 28px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 30px;
-      background: #ff2f6d;
-      color: white;
-      cursor: pointer;
-      display: none;
+    #message h1 {
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      margin-bottom: 12px;
     }
 
-    #yesBtn:hover {
-      background: #ff5c8a;
+    #yesBtn {
+      padding: 14px 36px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff2f6d, #ff6fa1);
+      color: white;
+      cursor: pointer;
+      min-width: 160px;
+    }
+
+    #yesBtn:active {
+      transform: scale(0.97);
     }
   </style>
 </head>
 <body>
 
   <div id="slideshow">
-    <img src="photos/1.jpg">
-    <img src="photos/2.jpg">
-    <img src="photos/3.jpg">
-    <img src="photos/4.jpg">
-    <img src="photos/5.jpg">
-    <img src="photos/6.jpg">
-    <!-- Add more if you want -->
-  </div>
-
-  <div id="message">
-    Will you be my Valentine? 💖
-    <br>
-    <button id="yesBtn" onclick="celebrate()">Yes 💕</button>
-  </div>
-
-  <script>
-    const images = document.querySelectorAll('#slideshow img');
-    const message = document.getElementById('message');
-    const yesBtn = document.getElementById('yesBtn');
-
-    let index = 0;
-
-    function showNextImage() {
-      if (index > 0) {
-        images[index - 1].style.opacity = 0;
-      }
-
-      if (index < images.length) {
-        images[index].style.opacity = 1;
-        index++;
-        setTimeout(showNextImage, 2500);
-      } else {
-        setTimeout(() => {
-          message.style.opacity = 1;
-          yesBtn.style.display = 'inline-block';
-        }, 1500);
-      }
-    }
-
-    function celebrate() {
-      message.innerHTML = "Yayyy!! ❤️💃🕺<br>Happy Valentine’s Day!";
-    }
-
-    showNextImage();
-  </script>
-
-</body>
-</html>
+    <img src="photos/1.jpg" alt="">
+    <img src="photos/2.jpg" alt=
