@@ -6,9 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -18,7 +16,6 @@
       overflow: hidden;
     }
 
-    /* Full screen container */
     #app {
       position: relative;
       width: 100vw;
@@ -28,6 +25,7 @@
     #slideshow {
       position: absolute;
       inset: 0;
+      z-index: 1;
     }
 
     #slideshow img {
@@ -38,7 +36,7 @@
       max-width: 90vw;
       max-height: 80vh;
       opacity: 0;
-      transition: opacity 1.5s ease;
+      transition: opacity 3s ease;
       border-radius: 16px;
       box-shadow: 0 0 25px rgba(255, 0, 100, 0.6);
     }
@@ -53,8 +51,8 @@
       opacity: 0;
       transition: opacity 2s ease;
       z-index: 5;
-      padding: 20px;
       text-align: center;
+      padding: 20px;
     }
 
     h1 {
@@ -62,31 +60,21 @@
       margin-bottom: 20px;
     }
 
-    .buttons {
-      position: relative;
-      width: 260px;
-      height: 80px;
-    }
-
     button {
-      padding: 12px 28px;
-      font-size: 1.1rem;
+      padding: 14px 36px;
+      font-size: 1.2rem;
       border: none;
       border-radius: 999px;
       cursor: pointer;
+      background: linear-gradient(135deg, #ff2f6d, #ff6fa1);
+      color: white;
+    }
+
+    canvas {
       position: absolute;
-    }
-
-    #yesBtn {
-      left: 0;
-      background: #ff2f6d;
-      color: white;
-    }
-
-    #noBtn {
-      right: 0;
-      background: #444;
-      color: white;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
     }
   </style>
 </head>
@@ -98,22 +86,27 @@
     <img src="photos/1.jpg">
     <img src="photos/2.jpg">
     <img src="photos/3.jpg">
+    <img src="photos/4.jpg">
+    <img src="photos/5.jpg">
+    <img src="photos/6.jpg">
   </div>
 
   <div id="message">
     <h1>Will you be my Valentine? 💖</h1>
-    <div class="buttons">
-      <button id="yesBtn">Yes 💕</button>
-      <button id="noBtn">No 🙈</button>
-    </div>
+    <button id="yesBtn">Yes 💕</button>
   </div>
+
+  <canvas id="effects"></canvas>
+
+  <!-- Background music -->
+  <audio id="music" src="music.mp3" preload="auto"></audio>
 
 </div>
 
 <script>
+  /* ---------- Slideshow ---------- */
   const images = document.querySelectorAll('#slideshow img');
   const message = document.getElementById('message');
-  const noBtn = document.getElementById('noBtn');
   const yesBtn = document.getElementById('yesBtn');
 
   let i = 0;
@@ -124,27 +117,90 @@
     if (i < images.length) {
       images[i].style.opacity = 1;
       i++;
-      setTimeout(showImages, 2500);
+      setTimeout(showImages, 7000);
     } else {
-      setTimeout(() => message.style.opacity = 1, 1000);
+      setTimeout(() => {
+        message.style.opacity = 1;
+        startHearts();
+      }, 1200);
     }
   }
 
-  function moveNo() {
-    const parent = noBtn.parentElement;
-    const maxX = parent.offsetWidth - noBtn.offsetWidth;
-    const maxY = parent.offsetHeight - noBtn.offsetHeight;
+  /* ---------- Floating Hearts ---------- */
+  const canvas = document.getElementById("effects");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-    noBtn.style.left = Math.random() * maxX + "px";
-    noBtn.style.top = Math.random() * maxY + "px";
+  let hearts = [];
+
+  function createHeart() {
+    return {
+      x: Math.random() * canvas.width,
+      y: canvas.height + 20,
+      size: Math.random() * 20 + 10,
+      speed: Math.random() * 1.5 + 0.5,
+      opacity: Math.random()
+    };
   }
 
-  noBtn.addEventListener("mouseenter", moveNo);
-  noBtn.addEventListener("touchstart", moveNo);
+  function startHearts() {
+    setInterval(() => hearts.push(createHeart()), 300);
+  }
+
+  function drawHearts() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hearts.forEach((h, index) => {
+      ctx.globalAlpha = h.opacity;
+      ctx.font = `${h.size}px serif`;
+      ctx.fillText("💖", h.x, h.y);
+      h.y -= h.speed;
+      if (h.y < -50) hearts.splice(index, 1);
+    });
+    requestAnimationFrame(drawHearts);
+  }
+  drawHearts();
+
+  /* ---------- Confetti ---------- */
+  function confettiBurst() {
+    for (let i = 0; i < 80; i++) {
+      hearts.push({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        size: Math.random() * 24 + 12,
+        speed: Math.random() * 4 + 2,
+        opacity: 1
+      });
+    }
+  }
 
   yesBtn.onclick = () => {
-    message.innerHTML = "<h1>Yayyy!! ❤️🥰<br>Happy Valentine’s Day!</h1>";
+    confettiBurst();
+    message.innerHTML = "<h1>Yayyy!!!!! ❤️🥰<br>Happy Valentine’s Day Booboo!!!</h1>";
   };
+
+  /* ---------- Music (fade-in) ---------- */
+  const music = document.getElementById("music");
+  music.volume = 0;
+
+  function fadeInMusic() {
+    music.play().catch(() => {});
+    let vol = 0;
+    const fade = setInterval(() => {
+      if (vol < 0.6) {
+        vol += 0.02;
+        music.volume = vol;
+      } else {
+        clearInterval(fade);
+      }
+    }, 200);
+  }
+
+  fadeInMusic();
+
+  // iOS fallback: start music on first interaction if blocked
+  document.addEventListener("touchstart", fadeInMusic, { once: true });
+  document.addEventListener("click", fadeInMusic, { once: true });
 
   showImages();
 </script>
