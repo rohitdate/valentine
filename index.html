@@ -22,6 +22,31 @@
       height: 100vh;
     }
 
+    /* ---------- Intro Screen ---------- */
+    #intro {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, #1a001f, #000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      cursor: pointer;
+      transition: opacity 1.5s ease;
+    }
+
+    #intro h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    /* ---------- Slideshow ---------- */
     #slideshow {
       position: absolute;
       inset: 0;
@@ -41,6 +66,7 @@
       box-shadow: 0 0 25px rgba(255, 0, 100, 0.6);
     }
 
+    /* ---------- Message ---------- */
     #message {
       position: absolute;
       inset: 0;
@@ -70,6 +96,7 @@
       color: white;
     }
 
+    /* ---------- Effects ---------- */
     canvas {
       position: absolute;
       inset: 0;
@@ -82,6 +109,12 @@
 
 <div id="app">
 
+  <!-- Intro Screen -->
+  <div id="intro">
+    <h1>Hey cutie, tap here... 💖</h1>
+  </div>
+
+  <!-- Slideshow -->
   <div id="slideshow">
     <img src="photos/1.jpg">
     <img src="photos/2.jpg">
@@ -91,26 +124,29 @@
     <img src="photos/6.jpg">
   </div>
 
+  <!-- Valentine Message -->
   <div id="message">
     <h1>Will you be my Valentine? 💖</h1>
-    <button id="yesBtn">Yes 💕</button>
+    <button id="yesBtn">Say Yesssss 💕💕💕</button>
   </div>
 
   <canvas id="effects"></canvas>
 
-  <!-- Background music -->
+  <!-- Music -->
   <audio id="music" src="music.mp3" preload="auto"></audio>
 
 </div>
 
 <script>
-  /* ---------- Slideshow ---------- */
-  const images = document.querySelectorAll('#slideshow img');
-  const message = document.getElementById('message');
-  const yesBtn = document.getElementById('yesBtn');
+  const intro = document.getElementById("intro");
+  const images = document.querySelectorAll("#slideshow img");
+  const message = document.getElementById("message");
+  const yesBtn = document.getElementById("yesBtn");
+  const music = document.getElementById("music");
 
   let i = 0;
 
+  /* ---------- Slideshow ---------- */
   function showImages() {
     if (i > 0) images[i - 1].style.opacity = 0;
 
@@ -126,12 +162,26 @@
     }
   }
 
-  /* ---------- Floating Hearts ---------- */
+  /* ---------- Music Fade-in ---------- */
+  function startMusic() {
+    music.volume = 0;
+    music.play();
+    let v = 0;
+    const fade = setInterval(() => {
+      if (v < 0.6) {
+        v += 0.02;
+        music.volume = v;
+      } else {
+        clearInterval(fade);
+      }
+    }, 200);
+  }
+
+  /* ---------- Hearts ---------- */
   const canvas = document.getElementById("effects");
   const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
   let hearts = [];
 
   function createHeart() {
@@ -150,12 +200,12 @@
 
   function drawHearts() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    hearts.forEach((h, index) => {
+    hearts.forEach((h, idx) => {
       ctx.globalAlpha = h.opacity;
       ctx.font = `${h.size}px serif`;
       ctx.fillText("💖", h.x, h.y);
       h.y -= h.speed;
-      if (h.y < -50) hearts.splice(index, 1);
+      if (h.y < -50) hearts.splice(idx, 1);
     });
     requestAnimationFrame(drawHearts);
   }
@@ -176,33 +226,16 @@
 
   yesBtn.onclick = () => {
     confettiBurst();
-    message.innerHTML = "<h1>Yayyy!!!!! ❤️🥰<br>Happy Valentine’s Day Booboo!!!</h1>";
+    message.innerHTML = "<h1>Yayyy!!! ❤️🥰<br>Happy Valentine’s Day Booboo!!!</h1>";
   };
 
-  /* ---------- Music (fade-in) ---------- */
-  const music = document.getElementById("music");
-  music.volume = 0;
-
-  function fadeInMusic() {
-    music.play().catch(() => {});
-    let vol = 0;
-    const fade = setInterval(() => {
-      if (vol < 0.6) {
-        vol += 0.02;
-        music.volume = vol;
-      } else {
-        clearInterval(fade);
-      }
-    }, 200);
-  }
-
-  fadeInMusic();
-
-  // iOS fallback: start music on first interaction if blocked
-  document.addEventListener("touchstart", fadeInMusic, { once: true });
-  document.addEventListener("click", fadeInMusic, { once: true });
-
-  showImages();
+  /* ---------- Start Everything ---------- */
+  intro.addEventListener("click", () => {
+    intro.style.opacity = 0;
+    setTimeout(() => intro.remove(), 1500);
+    startMusic();
+    showImages();
+  });
 </script>
 
 </body>
