@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>For You ❤️</title>
 
-  <!-- Mobile / iPhone friendly viewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <style>
@@ -33,22 +32,30 @@
       text-align: center;
     }
 
+    #slideshow {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
     #slideshow img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  height: 80svh;
-  object-fit: contain;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
-  border-radius: 16px;
-  box-shadow: 0 0 25px rgba(255, 64, 129, 0.5);
-}
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90vw;
+      height: 80svh;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(255, 64, 129, 0.5);
+    }
 
     #message {
       position: absolute;
+      z-index: 2;
       padding: 0 16px;
       opacity: 0;
       transition: opacity 2s ease;
@@ -56,28 +63,40 @@
 
     #message h1 {
       font-size: clamp(1.8rem, 6vw, 3rem);
-      margin-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 10px;
+      position: relative;
+    }
+
+    button {
+      padding: 14px 36px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      min-width: 140px;
     }
 
     #yesBtn {
-      padding: 14px 36px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 999px;
       background: linear-gradient(135deg, #ff2f6d, #ff6fa1);
       color: white;
-      cursor: pointer;
-      min-width: 160px;
     }
 
-    #yesBtn:active {
-      transform: scale(0.97);
+    #noBtn {
+      background: #444;
+      color: white;
+      position: absolute;
+    }
+
+    button:active {
+      transform: scale(0.96);
     }
   </style>
 </head>
 <body>
-
-  <div id="slideshow">
-    <img src="photos/1.jpg" alt="">
-    <img src="photos/2.jpg" alt=
-
