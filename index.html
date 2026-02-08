@@ -1,42 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>For You ❤️</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    :root {
-      --safe-top: env(safe-area-inset-top);
-      --safe-bottom: env(safe-area-inset-bottom);
-    }
-
     * {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
-      padding-top: var(--safe-top);
-      padding-bottom: var(--safe-bottom);
-      background: radial-gradient(circle at top, #1a001f, #000);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100svh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
       color: white;
-      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Full screen container */
+    #app {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
     }
 
     #slideshow {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
+      position: absolute;
+      inset: 0;
     }
 
     #slideshow img {
@@ -44,59 +35,119 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 90vw;
-      height: 80svh;
-      object-fit: contain;
+      max-width: 90vw;
+      max-height: 80vh;
       opacity: 0;
-      transition: opacity 1.5s ease-in-out;
+      transition: opacity 1.5s ease;
       border-radius: 16px;
-      box-shadow: 0 0 25px rgba(255, 64, 129, 0.5);
+      box-shadow: 0 0 25px rgba(255, 0, 100, 0.6);
     }
 
     #message {
       position: absolute;
-      z-index: 2;
-      padding: 0 16px;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       opacity: 0;
       transition: opacity 2s ease;
+      z-index: 5;
+      padding: 20px;
+      text-align: center;
     }
 
-    #message h1 {
-      font-size: clamp(1.8rem, 6vw, 3rem);
+    h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
       margin-bottom: 20px;
     }
 
     .buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      margin-top: 10px;
       position: relative;
+      width: 260px;
+      height: 80px;
     }
 
     button {
-      padding: 14px 36px;
+      padding: 12px 28px;
       font-size: 1.1rem;
       border: none;
       border-radius: 999px;
       cursor: pointer;
-      min-width: 140px;
+      position: absolute;
     }
 
     #yesBtn {
-      background: linear-gradient(135deg, #ff2f6d, #ff6fa1);
+      left: 0;
+      background: #ff2f6d;
       color: white;
     }
 
     #noBtn {
+      right: 0;
       background: #444;
       color: white;
-      position: absolute;
-    }
-
-    button:active {
-      transform: scale(0.96);
     }
   </style>
 </head>
 <body>
+
+<div id="app">
+
+  <div id="slideshow">
+    <img src="photos/1.jpg">
+    <img src="photos/2.jpg">
+    <img src="photos/3.jpg">
+  </div>
+
+  <div id="message">
+    <h1>Will you be my Valentine? 💖</h1>
+    <div class="buttons">
+      <button id="yesBtn">Yes 💕</button>
+      <button id="noBtn">No 🙈</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const images = document.querySelectorAll('#slideshow img');
+  const message = document.getElementById('message');
+  const noBtn = document.getElementById('noBtn');
+  const yesBtn = document.getElementById('yesBtn');
+
+  let i = 0;
+
+  function showImages() {
+    if (i > 0) images[i - 1].style.opacity = 0;
+
+    if (i < images.length) {
+      images[i].style.opacity = 1;
+      i++;
+      setTimeout(showImages, 2500);
+    } else {
+      setTimeout(() => message.style.opacity = 1, 1000);
+    }
+  }
+
+  function moveNo() {
+    const parent = noBtn.parentElement;
+    const maxX = parent.offsetWidth - noBtn.offsetWidth;
+    const maxY = parent.offsetHeight - noBtn.offsetHeight;
+
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+  }
+
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("touchstart", moveNo);
+
+  yesBtn.onclick = () => {
+    message.innerHTML = "<h1>Yayyy!! ❤️🥰<br>Happy Valentine’s Day!</h1>";
+  };
+
+  showImages();
+</script>
+
+</body>
+</html>
